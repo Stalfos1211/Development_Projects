@@ -20,7 +20,7 @@ var link = '';
 
 console.log("I am popup.js");
 
-document.getElementById("copy-id").onclick = function(e){
+/*document.getElementById("copy-id").onclick = function(e){
   hello();
 }
 
@@ -30,13 +30,22 @@ function hello() {
       greeting: "hello"
     },
     function(response) {
-      document.getElementById("template-name").textContent = response.msg;
+      document.getElementById("template-name").textContent = response.url;
+    });
+}*/
+
+chrome.browserAction.onClicked.addListener(test())
+
+function test(){
+  chrome.runtime.sendMessage({
+      greeting: "hello"
+    },
+    function(response) {
+      document.getElementById("template-name").textContent = response.url;
     });
 }
 
-
-
-chrome.browserAction.onClicked.addListener(
+/*chrome.browserAction.onClicked.addListener(
   function (tabs) {
     alert('test alert from popup');
     console.log('browserAction a:', tabs);
@@ -50,10 +59,10 @@ chrome.runtime.onMessage.addListener(
     	alert('message recieved tab has been activated');
     }
 
-});
+});*/
 
-$('#template-name').text('this is a test');
-console = chrome.extension.getBackgroundPage().console
+//$('#template-name').text('this is a test');
+//console = chrome.extension.getBackgroundPage().console
 //alert(chrome.extension.getBackgroundPage().link)
 
 //chrome.extension.getBackgroundPage().variable = 42;

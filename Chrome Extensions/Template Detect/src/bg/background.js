@@ -1,57 +1,45 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
-
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
-// });
-
-
-//example of using a message handler from the inject scripts
-/*chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
-
-var currentUrl = '';*/
-
-/*chrome.webNavigation.onCompleted.addListener(function(e) {
-	var currentUrl = (e.url == 'about:blank') ? currentUrl : e.url;
-	console.log('onCompleted', currentUrl)
-	chrome.tabs.getSelected(null,function(tab) {
-	    var tablink = tab.url;
-	    console.log(tablink)
-	});
-});*/
-
-/*chrome.webNavigation.onCommitted.addListener(function(e) {
-	var currentUrl = (e.url == 'about:blank') ? currentUrl : e.url
-	console.log('onCommited', currentUrl)
-});*/
-
-/*chrome.webNavigation.onDOMContentLoaded.addListener(function(e) {
-	var currentUrl = (e.url == 'about:blank') ? currentUrl : e.url
-	//console.log('onDOMContentLoaded', currentUrl)
-	chrome.tabs.getSelected(null,function(tab) {
-	    var tablink = (tab.url) ? tab.url : '';
-	    console.log(tablink)
-	});
-});
-*/
-
-
-
 console.log("I am background.js");
+
+var currentUrl = '';
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.greeting == "hello")
       sendResponse({
-        msg: "goodbye!"
+        url: currentUrl
       });
   });
 
+// When tab finish updating update the current url
+chrome.tabs.onUpdated.addListener(function(tabId , info) {
+    if (info.status == "complete") {
 
-var currentUrl =  '';
+        chrome.tabs.getSelected(null,function(tab) {
+        	var tablink = tab.url;
+        	currentUrl = tablink;
+	    });
+    }
+});
+
+// When switching tabs update current url
+chrome.tabs.onActivated.addListener(function(tabId , info) {
+
+        //console.log('tabId',tabId)
+        //console.log(info)
+        chrome.tabs.getSelected(null,function(tab) {
+        	var tablink = tab.url;
+	    	console.log('onActivated',tablink)
+	    	currentUrl = tablink;
+	    	chrome.tabs.sendMessage(tabId.tabId, {"message": "tab_activated"});
+	    });
+});
+
+
+function matchUrl() {
+
+}
+
+/*var currentUrl =  '';
 
 chrome.tabs.onUpdated.addListener(function(tabId , info) {
     if (info.status == "complete") {
@@ -91,6 +79,14 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
   });
 })
+
+
+function changeIcon() {
+
+	// Change Icon
+	//chrome.browserAction.setTitle({title: "testing"});
+	//chrome.browserAction.disable()
+}*/
 
 /*function sendVarsToPopup(){
 	var popups = chrome.extension.getViews({type: "popup"});
