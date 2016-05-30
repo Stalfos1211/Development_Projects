@@ -105,13 +105,3 @@ function getId(url, findIdText) {
 	return id;
 
 }
-
-/*var text = 'https://groveatwhiterock.securecafe.com/residentservices/the-grove-at-white-rock/userlogin.aspx?utm_nooverride=1&&_yTrackUser=OTY1MDEyMjMjMTA5MjM2NTU3MA%3d%3d-RguuWuqWQsk%3d&_yTrackVisit=MTY0NzM4NzEyIzE0MTU5OTQ1OA%3d%3d-PxBcq%2bXq9y0%3d';
-
-var regex1 = '(https:\/\/)(.*)(\.securecafe.*)';
-
-var newtext = text.replace(regex1, "$2");
-
-var testRE = text.match("https://(.*).securecafe");
-
-document.body.innerHTML = testRE[1];*/

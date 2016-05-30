@@ -14,12 +14,3 @@ function getTemplateInfo(){
       document.getElementById("template-id").textContent = response.templateInfo.id;
     });
 }
-
-/*document.getElementById("copy-id").onclick = function(e){
-  copyToClipboard('test copy');
-}*/
-
-/*function copyToClipboard(text) {
-  //document.execCommand('copy');
-  window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-}*/
