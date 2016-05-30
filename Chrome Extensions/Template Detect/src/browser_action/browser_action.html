@@ -1,19 +1,32 @@
-<!doctype html>
-<style type="text/css">
-	#mainPopup {
-		padding: 2px;
-		height: 140px;
-		width: 180px;
-		font-family: Helvetica, Ubuntu, Arial, sans-serif;
-	}
-	h1 {
-		font-size: 2em;
-	}
-</style>
+<html>
 
-<div id="mainPopup">
-<h2>Template Detected!</h2>
-<p>Template Name: Template 1</p>
-<p>Template ID: temp01</p>
-<button>copy id</button>
-</div>
+<head>
+
+	<style type="text/css">
+		#mainPopup {
+			padding: 2px;
+			height: 140px;
+			width: 180px;
+			font-family: Helvetica, Ubuntu, Arial, sans-serif;
+		}
+		h1 {
+			font-size: 2em;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="mainPopup">
+
+		<h2>Template Detected!</h2>
+		<p>Template Name: <span id="template-name"></span></p>
+		<p>Template ID: temp01</p>
+		<button id="copy-id">copy id</button>
+
+	</div>
+	<script type="text/javascript" src="../../js/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="browser_action.js"></script>
+	<script type="text/javascript" src="../../src/bg/background.js"></script>
+</body>
+
+</html>

@@ -12,18 +12,25 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "src/bg/background.js"
+      "src/bg/background.js",
+      "src/browser_action/browser_action.js",
+      "js/jquery/jquery.min.js"
     ],
     "persistent": false
   },
   "browser_action": {
     "default_icon": "icons/icon19.png",
-    "default_title": "browser action demo",
+    "default_title": "Auto Detect Template",
     "default_popup": "src/browser_action/browser_action.html"
   },
   "permissions": [
     "https://*/*,http://*/*,file://*/*",
     "webNavigation",
+    "tabs",
     "activeTab"
-  ]
+  ],
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["src/browser_action/browser_action.js"]
+  }]
 }
