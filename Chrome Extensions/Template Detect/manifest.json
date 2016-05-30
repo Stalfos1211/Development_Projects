@@ -27,6 +27,9 @@
     "https://*/*,http://*/*,file://*/*",
     "webNavigation",
     "tabs",
+    "clipboardWrite",
+    "clipboardRead",
+    "declarativeContent",
     "activeTab"
   ],
   "content_scripts": [{
