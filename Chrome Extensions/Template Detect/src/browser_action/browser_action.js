@@ -11,6 +11,7 @@ function getTemplateInfo(){
     function(response) {
       console.log('response', response.templateInfo);
       document.getElementById("template-name").textContent = response.templateInfo.name;
+      document.getElementById("template-id").textContent = response.templateInfo.id;
     });
 }
 

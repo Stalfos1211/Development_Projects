@@ -17,8 +17,6 @@ chrome.tabs.onUpdated.addListener(function(tabId , info) {
 // When switching tabs update current url
 chrome.tabs.onActivated.addListener(function(tabId , info) {
 
-        //console.log('tabId',tabId)
-        //console.log(info)
         chrome.tabs.getSelected(null,function(tab) {
         	var currentUrl = tab.url;
 	    	matchUrl(currentUrl);
@@ -37,24 +35,22 @@ function matchUrl(url) {
 
 			console.log('match found: ',templateList[i].templateName);
 
-			foundMatch(true);
+			iconEnabled(true);
 
-			// Send data to pop-up
-			templateInfo = {"name" : templateList[i].templateName, "id" : 'theId'};
+			templateInfo = {"name" : templateList[i].templateName, "id" : getId(url, templateList[i].findIdText)};
 			
 			return;
 		} 
 		else {
-			foundMatch(false);
+			iconEnabled(false);
 		}
 	}
 }
 
-function foundMatch(match) {
-	if (match) {
+function iconEnabled(foundMatch) {
+	if (foundMatch) {
 		chrome.browserAction.setTitle({title: "Template Match"});
 		chrome.browserAction.enable();
-		//return {"name" : name, "id" : id};
 	}
 	else {
 		chrome.browserAction.setTitle({title: "No Match"});
@@ -65,12 +61,18 @@ function foundMatch(match) {
 var templateList = [
 
 	{
-	"templateName" : 'Resident Portal',
-	"urlToMatch" : 'residentportal.com/resident_portal/?module=authentication&action=view_login'
+	"templateName" : "Resident Portal",
+	"urlToMatch" : "residentportal.com/resident_portal/?module=authentication&action=view_login",
+	"findIdText" : [["https://", ".residentportal.com/"]]
 	},
 	{
-	"templateName" : 'Google',
-	"urlToMatch" : 'google.com'
+	"templateName" : "Secure Cafe",
+	"urlToMatch" : "securecafe.com/residentservices/",
+	"findIdText" : [["https://", ".securecafe"], ["residentservices/", "/userlogin.aspx"]]
+	},
+	{
+	"templateName" : "Google",
+	"urlToMatch" : "google.com"
 	}
 
 ];
@@ -82,3 +84,34 @@ chrome.runtime.onMessage.addListener(
         templateInfo: templateInfo
       });
   });
+
+function getId(url, findIdText) {
+
+	var id = '';
+
+	if (findIdText) {
+
+		for (var j = 0; j < findIdText.length; j++) {
+
+			var text = url.match(findIdText[j][0] + '(.*)' + findIdText[j][1]);
+			if (j>0){id += ','};
+			id += text[1];
+		}
+
+	}
+	else{
+		id = 'no id';
+	}
+	return id;
+
+}
+
+/*var text = 'https://groveatwhiterock.securecafe.com/residentservices/the-grove-at-white-rock/userlogin.aspx?utm_nooverride=1&&_yTrackUser=OTY1MDEyMjMjMTA5MjM2NTU3MA%3d%3d-RguuWuqWQsk%3d&_yTrackVisit=MTY0NzM4NzEyIzE0MTU5OTQ1OA%3d%3d-PxBcq%2bXq9y0%3d';
+
+var regex1 = '(https:\/\/)(.*)(\.securecafe.*)';
+
+var newtext = text.replace(regex1, "$2");
+
+var testRE = text.match("https://(.*).securecafe");
+
+document.body.innerHTML = testRE[1];*/
