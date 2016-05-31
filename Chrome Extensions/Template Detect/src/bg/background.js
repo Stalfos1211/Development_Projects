@@ -71,6 +71,11 @@ var templateList = [
 	"findIdText" : [["https://", ".securecafe"], ["residentservices/", "/userlogin.aspx"]]
 	},
 	{
+	"templateName" : "RentPayment",
+	"urlToMatch" : "https://www.rentpayment.com/pay/login.html",
+	"findIdText" : [["pay/login.html?pc="]]
+	},
+	{
 	"templateName" : "Google",
 	"urlToMatch" : "google.com"
 	}
@@ -93,9 +98,18 @@ function getId(url, findIdText) {
 
 		for (var j = 0; j < findIdText.length; j++) {
 
-			var text = url.match(findIdText[j][0] + '(.*)' + findIdText[j][1]);
-			if (j>0){id += ','};
-			id += text[1];
+			// Get text in between
+			if (findIdText[j][1]) {
+				var text = url.match(findIdText[j][0] + '(.*)' + findIdText[j][1]);
+				if (j>0){id += ','};
+				id += text[1];
+			}
+			// Get text after
+			else {
+				var beginningtext = findIdText[j][0];
+				var beginning = url.indexOf(beginningtext) + beginningtext.length;
+				id = url.substr( beginning, url.length );
+			}
 		}
 
 	}
@@ -112,6 +126,8 @@ chrome.runtime.onMessage.addListener(function(message) {
     if (message && message.type == 'copy') {
         var input = document.createElement('textarea');
         document.body.appendChild(input);
+        input.style.position = 'fixed';
+  		input.style.opacity = 0;
         input.value = message.text;
         input.focus();
         input.select();

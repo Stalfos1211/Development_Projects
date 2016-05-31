@@ -9,19 +9,71 @@
 			width: 180px;
 			font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		}
+		#copy-id {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			height: 10px;
+		}
+		.bottom-line {
+			padding-bottom: 10px;
+			border-bottom: 1px solid #cccccc;
+		}
 		h1 {
 			font-size: 2em;
+			margin: 5px;
 		}
+		.myButton {
+			-moz-box-shadow:inset 0px 1px 0px 0px #9fb4f2;
+			-webkit-box-shadow:inset 0px 1px 0px 0px #9fb4f2;
+			box-shadow:inset 0px 1px 0px 0px #9fb4f2;
+			background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e));
+			background:-moz-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+			background:-webkit-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+			background:-o-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+			background:-ms-linear-gradient(top, #7892c2 5%, #476e9e 100%);
+			background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7892c2', endColorstr='#476e9e',GradientType=0);
+			background-color:#7892c2;
+			-moz-border-radius:3px;
+			-webkit-border-radius:3px;
+			border-radius:3px;
+			border:1px solid #4e6096;
+			display:inline-block;
+			cursor:pointer;
+			color:#ffffff;
+			font-family:Arial;
+			font-size:13px;
+			padding:6px 24px;
+			text-decoration:none;
+			text-shadow:0px 1px 0px #283966;
+			padding-bottom: 12px;
+		}
+		.myButton:hover {
+			background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #476e9e), color-stop(1, #7892c2));
+			background:-moz-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+			background:-webkit-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+			background:-o-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+			background:-ms-linear-gradient(top, #476e9e 5%, #7892c2 100%);
+			background:linear-gradient(to bottom, #476e9e 5%, #7892c2 100%);
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#476e9e', endColorstr='#7892c2',GradientType=0);
+			background-color:#476e9e;
+		}
+		.myButton:active {
+			position:relative;
+			top:1px;
+		}
+
 	</style>
 </head>
 
 <body>
 	<div id="mainPopup">
 
-		<h2>Template Detected!</h2>
+		<div class="bottom-line"><h2 style="margin: 0px;">Template Detected!</h2></div>
 		<p>Template Name: <span id="template-name" style="font-weight: bold;"></span></p>
-		<p>Template ID: <span id="template-id" style="font-weight: bold;"></span></p>
-		<button id="copy-id" data-clipboard-target="#template-id">copy id</button>
+		<div class="bottom-line"><p style="margin-bottom: 0px;">Template ID: <span id="template-id" style="font-weight: bold;"></span></p></div>
+		<!-- <button id="copy-id" data-clipboard-target="#template-id">copy id</button> -->
+		<a href="#" class="myButton" id="copy-id">Copy ID to Clipboard</a>
 
 	</div>
 	<script type="text/javascript" src="../../js/jquery/jquery.min.js"></script>
