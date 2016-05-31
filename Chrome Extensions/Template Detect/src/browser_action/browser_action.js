@@ -1,6 +1,4 @@
 
-console.log("I am popup.js");
-
 var id = '';
 
 chrome.browserAction.onClicked.addListener(getTemplateInfo());

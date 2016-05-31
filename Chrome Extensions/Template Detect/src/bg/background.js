@@ -1,4 +1,3 @@
-console.log("I am background.js");
 
 var currentUrl = '';
 var templateInfo = {};
@@ -32,8 +31,6 @@ function matchUrl(url) {
 	// Test match each item on the template list
 	for (var i=0; i < templateList.length; i++){
 		if (url.indexOf(templateList[i].urlToMatch) > -1) {
-
-			console.log('match found: ',templateList[i].templateName);
 
 			iconEnabled(true);
 
