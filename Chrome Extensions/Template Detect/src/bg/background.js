@@ -25,9 +25,6 @@ chrome.tabs.onActivated.addListener(function(tabId , info) {
 
 function matchUrl(url) {
 
-	var name = '';
-	var id = '';
-
 	// Test match each item on the template list
 	for (var i=0; i < templateList.length; i++){
 		if (url.indexOf(templateList[i].urlToMatch) > -1) {
@@ -71,11 +68,11 @@ var templateList = [
 	"templateName" : "RentPayment",
 	"urlToMatch" : "https://www.rentpayment.com/pay/login.html",
 	"findIdText" : [["pay/login.html?pc="]]
-	},
+	}/*,
 	{
 	"templateName" : "Google",
 	"urlToMatch" : "google.com"
-	}
+	}*/
 
 ];
 
