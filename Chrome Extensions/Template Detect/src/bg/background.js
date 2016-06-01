@@ -1,16 +1,19 @@
 
 var currentUrl = '';
 var templateInfo = {};
+var tab;
 
 // When tab finish loading update the current url
 chrome.tabs.onUpdated.addListener(function(tabId , info) {
     if (info.status == "complete") {
+    	tab = tabId.tabId;
         updateInfo();
     }
 });
 
 // When switching tabs update current url
 chrome.tabs.onActivated.addListener(function(tabId , info) {
+		tab = tabId.tabId;
         updateInfo();
 });
 
@@ -65,11 +68,11 @@ function matchUrl(url) {
 function iconEnabled(foundMatch) {
 	if (foundMatch) {
 		chrome.browserAction.setTitle({title: "Template Match"});
-		chrome.browserAction.enable();
+		chrome.browserAction.enable(tab);
 	}
 	else {
 		chrome.browserAction.setTitle({title: "No Match"});
-		chrome.browserAction.disable();
+		chrome.browserAction.disable(tab);
 	}
 }
 
