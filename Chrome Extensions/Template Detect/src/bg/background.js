@@ -1,19 +1,16 @@
 
-var currentUrl = '';
 var templateInfo = {};
-var tab;
+var tabId;
 
 // When tab finish loading update the current url
 chrome.tabs.onUpdated.addListener(function(tabId , info) {
     if (info.status == "complete") {
-    	tab = tabId.tabId;
         updateInfo();
     }
 });
 
 // When switching tabs update current url
 chrome.tabs.onActivated.addListener(function(tabId , info) {
-		tab = tabId.tabId;
         updateInfo();
 });
 
@@ -25,8 +22,8 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 
 function updateInfo() {
 	chrome.tabs.getSelected(null,function(tab) {
-    	var currentUrl = tab.url;
-    	matchUrl(currentUrl);
+		tabId = tab.id;
+    	matchUrl(tab.url);
     });
 }
 
@@ -68,11 +65,11 @@ function matchUrl(url) {
 function iconEnabled(foundMatch) {
 	if (foundMatch) {
 		chrome.browserAction.setTitle({title: "Template Match"});
-		chrome.browserAction.enable(tab);
+		chrome.browserAction.enable(tabId);
 	}
 	else {
 		chrome.browserAction.setTitle({title: "No Match"});
-		chrome.browserAction.disable(tab);
+		chrome.browserAction.disable(tabId);
 	}
 }
 
@@ -179,7 +176,7 @@ var templateList = [
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.test == "get")
+    if (request.get == "templateInfo")
       sendResponse({
         templateInfo: templateInfo
       });

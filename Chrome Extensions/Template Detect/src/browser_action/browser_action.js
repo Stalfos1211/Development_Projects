@@ -7,7 +7,7 @@ if (chrome.browserAction) {
 
 function getTemplateInfo(){
   chrome.runtime.sendMessage({
-      test: "get"
+      get: "templateInfo"
     },
     function(response) {
       document.getElementById("template-name").textContent = response.templateInfo.name;
