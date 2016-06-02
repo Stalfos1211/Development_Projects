@@ -1,5 +1,7 @@
 
+// Data sent to pop-up(browser_action) about template that is a match
 var templateInfo = {};
+// Used to keep track of which is the current tab to enabled/disable icon
 var tabId;
 
 // When tab finish loading update the current url
@@ -19,37 +21,42 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 	updateInfo();
 })
 
-
+// Update the info duh!
 function updateInfo() {
 	chrome.tabs.getSelected(null,function(tab) {
-		tabId = tab.id;
-    	matchUrl(tab.url);
+		// Check if actually a tab and not (ex console window)
+		if (tab.id > -1) {
+			tabId = tab.id;
+	    	matchUrl(tab.url);
+    	}
     });
 }
 
+// Checks if current url matches any template that is listed
 function matchUrl(url) {
 
 	// Test match each item on the template list
-	for (var i=0; i < templateList.length; i++){
+	for (var i=0; i < templateList.length; i++) {
 
 		// Initial check if match
-		if (url.indexOf(templateList[i].urlToMatch) > -1) {
+		if (url.toLowerCase().indexOf(templateList[i].urlToMatch.toLowerCase()) > -1) {
 
 			// Check if extra strings for matching exist
 			if(templateList[i].contains) {
 
-				// Extra check if match
+				// Extra string check if match
 				if(url.indexOf(templateList[i].contains))  {
+					
 					iconEnabled(true);
-
 					templateInfo = {"name" : templateList[i].templateName, "id" : getId(url, templateList[i].findIdText)};
 					
 					return;
 				}
 			}
+			// No extra string to check
 			else {
-				iconEnabled(true);
 
+				iconEnabled(true);
 				templateInfo = {"name" : templateList[i].templateName, "id" : getId(url, templateList[i].findIdText)};
 				
 				return;
@@ -62,6 +69,7 @@ function matchUrl(url) {
 	}
 }
 
+// Enables/Disables icon on the browser
 function iconEnabled(foundMatch) {
 	if (foundMatch) {
 		chrome.browserAction.setTitle({title: "Template Match"});
@@ -72,6 +80,64 @@ function iconEnabled(foundMatch) {
 		chrome.browserAction.disable(tabId);
 	}
 }
+
+// Send data to pop-up (browser_action) when requested
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.get == "templateInfo")
+      sendResponse({
+        templateInfo: templateInfo
+      });
+  });
+
+function getId(url, findIdText) {
+
+	var id = '';
+
+	if (findIdText) {
+
+		for (var j = 0; j < findIdText.length; j++) {
+
+			// Get text in between the two declared strings
+			// If second string is provided
+			if (findIdText[j][1]) {
+
+				var text = url.toLowerCase().match(findIdText[j][0].toLowerCase() + '(.*)' + findIdText[j][1].toLowerCase());
+				if (text) {
+					if (j>0){id += ','};
+					id += text[1];
+				}
+				else {
+					// couldn't find id with the provided strings
+					console.log('couldn\'t find match')
+				}
+			}
+			// Get text after declared string
+			else {
+				
+				if (url.indexOf(findIdText[j][0]) > -1) {
+					var beginningtext = findIdText[j][0].toLowerCase();
+					var beginning = url.toLowerCase().indexOf(beginningtext) + beginningtext.length;
+					if (j>0){id += ','};
+					id += url.substr( beginning, url.length );
+				}
+			}
+		}
+
+	}
+	else{
+		id = 'no id';
+	}
+	return id;
+
+}
+
+// The list
+// templateName - name of the template that is displayed on the pop-up
+// urlToMatch - string used to match the the url
+// contains - extra string for matching urls with gaps ex(http://www.somewebsite/(theId)/login.asp)
+// findIdText - find id between declared strings ["stringBeforeId", "stringAfterId"]
+//              find id after declared strings ["theIdIsAfterThisString"]
 
 var templateList = [
 
@@ -91,9 +157,11 @@ var templateList = [
 	"urlToMatch" : "https://smartclick.campusapts.com/Login.aspx"
 	},
 	{
+	// Need to double check on this
+	// https://property.onesite.realpage.com/welcomehome/home/login?siteId=3025623#url=%23login
 	"templateName" : "Realpage Welcomehome",
-	"urlToMatch" : "https://property.onesite.realpage.com/welcomehome",
-	"findIdText" : [["welcomehome/?siteid=", ".#url=%23login"]],
+	"urlToMatch" : "https://property.onesite.realpage.com/welcomehome/home/login?siteId",
+	"findIdText" : [["siteId=", "#url=%23login"]],
 	"contains" : "#url=%23login"
 	},
 	{
@@ -117,7 +185,7 @@ var templateList = [
 	{
 	"templateName" : "Rentcafe Resident Services",
 	"urlToMatch" : "https://www.rentcafe.com/residentservices/",
-	"findIdText" : [["https://", "/userlogin.aspx"]],
+	"findIdText" : [["residentservices/", "/userlogin.aspx"]],
 	"contains" : "/userlogin.aspx"
 	},
 	{
@@ -130,9 +198,11 @@ var templateList = [
 	"urlToMatch" : "https://www.paylease.com/login"
 	},
 	{
-	//need id for sign up
+	//need id for sign up required for other properties
+	// ex http://barringtonapartmentsaustin.com/
 	"templateName" : "Yapstone",
-	"urlToMatch" : "https://www.rentpayment.com/pay/login.html"
+	"urlToMatch" : "https://www.rentpayment.com/pay/login.html",
+	"findIdText" : [["login.html?pc="]]
 	},
 	{
 	"templateName" : "Aptexx",
@@ -162,9 +232,8 @@ var templateList = [
 	},
 	{
 	"templateName" : "OSCP",
-	"urlToMatch" : "https://billing",
-	"contains" : "/oscp/",
-	"findIdText" : [["billing.", "/oscp/"]]
+	"urlToMatch" : "oscp/OnlineServices/FeaturesLogin",
+	"findIdText" : [["https://", "/oscp/"]]
 	}
 	/*,
 	{
@@ -174,47 +243,8 @@ var templateList = [
 
 ];
 
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.get == "templateInfo")
-      sendResponse({
-        templateInfo: templateInfo
-      });
-  });
 
-function getId(url, findIdText) {
-
-	var id = '';
-
-	if (findIdText) {
-
-		for (var j = 0; j < findIdText.length; j++) {
-
-			// Get text in between
-			if (findIdText[j][1]) {
-				var text = url.match(findIdText[j][0] + '(.*)' + findIdText[j][1]);
-				if (j>0){id += ','};
-				id += text[1];
-			}
-			// Get text after
-			else {
-				var beginningtext = findIdText[j][0];
-				var beginning = url.indexOf(beginningtext) + beginningtext.length;
-				if (j>0){id += ','};
-				id += url.substr( beginning, url.length );
-			}
-		}
-
-	}
-	else{
-		id = 'no id';
-	}
-	return id;
-
-}
-
-
-
+// Copy to clipboard work around mess
 chrome.runtime.onMessage.addListener(function(message) {
     if (message && message.type == 'copy') {
         var input = document.createElement('textarea');

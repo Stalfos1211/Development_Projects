@@ -1,9 +1,9 @@
 {
-  "name": "Unbill Template Detect",
+  "name": "Template Detect",
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "This extension is used to automatically detect if page is compatible with one of the available templates",
-  "homepage_url": "http://www.krisdoromal.com",
+  "homepage_url": "http://www.google.com",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
