@@ -81,15 +81,6 @@ function iconEnabled(foundMatch) {
 	}
 }
 
-// Send data to pop-up (browser_action) when requested
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.get == "templateInfo")
-      sendResponse({
-        templateInfo: templateInfo
-      });
-  });
-
 function getId(url, findIdText) {
 
 	var id = '';
@@ -125,12 +116,21 @@ function getId(url, findIdText) {
 		}
 
 	}
-	else{
+	else {
 		id = 'no id';
 	}
 	return id;
-
 }
+
+// Send data to pop-up (browser_action) when requested
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.get == "templateInfo")
+      sendResponse({
+        templateInfo: templateInfo
+      });
+  });
+
 
 // The list
 // templateName - name of the template that is displayed on the pop-up
