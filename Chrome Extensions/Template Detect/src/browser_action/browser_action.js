@@ -6,7 +6,7 @@ chrome.browserAction.onClicked.addListener(getTemplateInfo());
 
 function getTemplateInfo(){
   chrome.runtime.sendMessage({
-      get: "templateInfo"
+      message: "getTemplateInfo"
     },
     function(response) {
 

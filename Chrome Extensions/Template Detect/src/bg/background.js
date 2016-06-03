@@ -1,7 +1,7 @@
 
 // Data sent to pop-up(browser_action) about template that is a match
 var templateInfo = {};
-// Used to keep track of which is the current tab to enabled/disable icon
+// Used to keep track of which is the current tab's icon to enabled/disable
 var tabId;
 
 // When tab finish loading update the current url
@@ -21,7 +21,7 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 	updateInfo();
 })
 
-// Update the info duh!
+// Update the info
 function updateInfo() {
 	chrome.tabs.getSelected(null,function(tab) {
 		// Check if actually a tab and not (ex console window)
@@ -107,8 +107,7 @@ function getId(url, findIdText) {
 			else {
 				
 				if (url.indexOf(findIdText[j][0]) > -1) {
-					var beginningtext = findIdText[j][0].toLowerCase();
-					var beginning = url.toLowerCase().indexOf(beginningtext) + beginningtext.length;
+					var beginning = url.toLowerCase().indexOf(findIdText[j][0].toLowerCase()) + findIdText[j][0].length;
 					if (j>0){id += ','};
 					id += url.substr( beginning, url.length );
 				}
@@ -125,7 +124,7 @@ function getId(url, findIdText) {
 // Send data to pop-up (browser_action) when requested
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.get == "templateInfo")
+    if (request.message == "getTemplateInfo")
       sendResponse({
         templateInfo: templateInfo
       });
@@ -136,8 +135,8 @@ chrome.runtime.onMessage.addListener(
 // templateName - name of the template that is displayed on the pop-up
 // urlToMatch - string used to match the the url
 // contains - extra string for matching urls with gaps ex(http://www.somewebsite/(theId)/login.asp)
-// findIdText - find id between declared strings ["stringBeforeId", "stringAfterId"]
-//              find id after declared strings ["theIdIsAfterThisString"]
+// findIdText - find id between declared strings ["stringBeforeId", "stringAfterId"] two strings
+//              find id after declared strings ["theIdIsAfterThisString"] one string
 
 var templateList = [
 
