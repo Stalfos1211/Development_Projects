@@ -49,7 +49,7 @@ function matchUrl(url) {
 					
 					iconEnabled(true);
 					templateInfo = {"name" : templateList[i].templateName, "id" : getId(url, templateList[i].findIdText)};
-					
+					animateIcon(true);
 					return;
 				}
 			}
@@ -58,12 +58,13 @@ function matchUrl(url) {
 
 				iconEnabled(true);
 				templateInfo = {"name" : templateList[i].templateName, "id" : getId(url, templateList[i].findIdText)};
-				
+				animateIcon(true);
 				return;
 
 			}
 		} 
 		else {
+			animateIcon(false);
 			iconEnabled(false);
 		}
 	}
@@ -257,3 +258,25 @@ chrome.runtime.onMessage.addListener(function(message) {
         input.remove();
     }
 });
+
+
+var animationInterval;
+function animateIcon(animate) {
+
+	var min = 0;
+	var max = 19;
+	var current = min;
+
+	if (animate) {
+		clearInterval(animationInterval);
+		animationInterval = setInterval(function(){
+			chrome.browserAction.setIcon({path:"icons/animated_icon" + current + ".png", tabId: tabId});
+			if (current++ > max) {current = min};
+		}, 30)
+	}
+	else {
+		clearInterval(animationInterval);
+		chrome.browserAction.setIcon({path:"icons/unbill-icon-19.png", tabId: tabId});
+	}
+
+}
