@@ -1,0 +1,52 @@
+{
+  "name": "Tools",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Various tools",
+  "homepage_url": "http://google.com",
+  "icons": {
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "src/bg/background.js",
+      "js/jquery/jquery.min.js"
+    ],
+    "persistent": true
+  },
+  "page_action": {
+    "default_icon": "icons/icon128.png",
+    "default_title": "page action demo",
+    "default_popup": "src/page_action/page_action.html"
+  },
+  "permissions": [
+    "activeTab",
+    "clipboardRead",
+    "clipboardWrite",
+    "contentSettings",
+    "tabs",
+    "https://*/* ",
+    "http://*/* ",
+    "file://*/* "
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ]
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/inject/inject.js",
+        "js/jquery/jquery.min.js"
+      ]
+    }
+  ]
+}
