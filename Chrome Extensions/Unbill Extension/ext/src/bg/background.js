@@ -1,54 +1,50 @@
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
-
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
-// });
-
-
-//example of using a message handler from the inject scripts
-/*chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-  	chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
-*/
-
-var loginInfo;
+var loginData;
+var targetTab;
 
 // Listen for webpage message
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    console.log('message received: ',request, sender)
     if (request.message == 'login') {
-      loginInfo = request.loginInfo;
-      password = request.password;
-      login(request.url);
+      loginData = request;
+      newIncognitoWindow(loginData.url);
     }
   });
 
 // Open new incognito window
-function login(url){
-  console.log('create new incognito window');
-  chrome.windows.create({"url": url, "incognito": true});
+function newIncognitoWindow(url){
+  chrome.windows.create({"url": url, "incognito": false});
+  chrome.tabs.query({active: true, currentWindow: true},function(tabs){console.log('newly created tab', targetTab = tabs[0].id)});
 }
 
 // Listen for new incognito window to finish loading
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log('bg listening: webpage finshed loading')
-    sendResponse(loginInfo);
+    //console.log('bg listening: webpage finshed loading')
+    //console.log('messages', sender)
+
+
+        //chrome.tabs.duplicate(tabs[0].id, function (){})
+        //chrome.tabs.executeScript(targetTab, {code: code}, function() {
+
+        //})
+
+    //chrome.tabs.executeScript(sender.tab.id, {code: code}, function(response) { });
+    /*chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+
+        chrome.tabs.executeScript(tabs[0].id, {code: code}, function(response) {
+
+        });
+
+      });*/
+    if (sender.tab.id == targetTab) {
+      sendResponse({message:'login', loginData: loginData});
+      //chrome.tabs.getCurrent(function(tab){console.log('tab:',tab)})
+      chrome.permissions.getAll(function(permissions){console.log(permissions)})
+      setTimeout(function(){chrome.tabs.executeScript(targetTab, {code: code}, function() {})}, 1000)
+      
+    }
+
   });
 
-/*function(){
-    console.log('sending message to inject')
-    // Send message to injected script
-    chrome.extension.sendMessage(
-      {
-        type: 'login',
-        username: username,
-        password: password
-      }, function(response) {
-
-    });
-
-  }*/
+var code = 'alert("test works")';

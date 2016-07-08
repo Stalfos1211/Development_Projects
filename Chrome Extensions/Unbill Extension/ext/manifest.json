@@ -17,9 +17,10 @@
   "permissions": [
     "clipboardRead",
     "clipboardWrite",
+    "activeTab",
     "tabs",
     "https://*/* ",
-    "https://*/* ",
+    "http://*/* ",
     "file://*/*"
   ],
   "externally_connectable": {
