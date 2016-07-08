@@ -1,0 +1,41 @@
+<html>
+<head>
+</head>
+<body>
+<button id="btnTest">Test</button>
+
+<script type="text/javascript">
+
+	var editorExtensionId = 'jopfpipghijnibokmcfmhfkglppajkoa';
+	var url = 'https://accounts.spotify.com/en/login';
+
+	document.getElementById('btnTest').onclick = function() {
+		sendMessageToExtension();
+	}
+
+	function sendMessageToExtension() {
+		chrome.runtime.sendMessage(editorExtensionId,
+			{
+				message: 'login',
+				url: url,
+				name: 'test',
+				loginInfo: [
+							{input:'input[name="username"]', value: 'testName'},
+							{input:'input[name="password"]', value: 'password'}
+							]
+			},
+
+		// Callback
+		function(response) {
+			if (response) {
+			  console.log(response);
+			}
+			else {
+
+			}
+		});
+	}
+
+</script>
+</body>
+</html>
